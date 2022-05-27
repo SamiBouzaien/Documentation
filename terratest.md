@@ -32,6 +32,50 @@ go test -v -timeout 30m
 
 ## Exemples de tests
 
+### Premier exemple
+
+```go
+package test
+
+import (
+	"testing"
+    "fmt"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestTerraformHelloWorldExample(t *testing.T) {
+
+    t.Parallel()
+    setTerraformVariables()
+
+    outputName := "hello_world"
+    expectedMessage := "Hello, World!"
+
+	// Construct the terraform options with default retryable errors to handle the most common
+	// retryable errors in terraform testing.
+	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		// Set the path to the Terraform code that will be tested.
+		TerraformDir: "../examples/terraform-hello-world-example",
+	})
+
+	// Clean up resources with "terraform destroy" at the end of the test.
+	defer terraform.Destroy(t, terraformOptions)
+
+	// Run "terraform init" and "terraform apply". Fail the test if there are any errors.
+	terraform.InitAndApply(t, terraformOptions)
+
+	// Run `terraform output` to get the values of output variables and check they have the expected values.
+    t.Run("helloworld_output_matching", func(t *testing.T) {
+        output := terraform.Output(t, terraformOptions, outputName)
+        fmt.Printf("Output value :: %s\n", output)
+        assert.Equal(t, expectedMessage, output)
+    }
+}
+```
+
+### Deuxieme exemple
+
 ```go
 package test
 
@@ -48,11 +92,13 @@ import (
 func TestTerraformAwsHelloWorldExample(t *testing.T) {
 	t.Parallel()
 
+	setTerraformVariables()
+
 	// Construct the terraform options with default retryable errors to handle the most common
 	// retryable errors in terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../examples/terraform-aws-hello-world-example",
+		TerraformDir: "../examples/terraform-hello-world-example",
 	})
 
 	// At the end of the test, run `terraform destroy` to clean up any resources that were created.
