@@ -6,9 +6,9 @@
 
 Sur votre machine, disposez
 
-- Go
-- Terraform
-- Azure cli
+- [GO](https://https://go.dev/)
+- [Terraform CLI](https://www.terraform.io/downloads)
+- [Azure CLI sur Windows](https://docs.microsoft.com/fr-ca/cli/azure/install-azure-cli-windows?tabs=azure-cli)
 
 ### Configuration
 
@@ -112,7 +112,7 @@ func TestTerraformAwsHelloWorldExample(t *testing.T) {
 
 	// Make an HTTP request to the instance and make sure we get back a 200 OK with the body "Hello, World!"
 	url := fmt.Sprintf("http://%s:8080", publicIp)
-	http_helper.HttpGetWithRetry(t, url, nil, 200, "Hello, World!", 30, 5*time.Second)
+	http_helper.HttpGetWithRetry(t, url, nil, 200, "Hello, World!", 5, 5*time.Second)
 }
 ```
 
